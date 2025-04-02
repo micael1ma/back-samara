@@ -1,18 +1,28 @@
 const Book = require('../model/book');
-const user = require('../model/user').default;
 
 const getAllBooks = async (req, res) => {
   const books = await Book.find().populate('user');
   res.json(books);
 };
 
+const getBooksByUser = async (req, res) => {
+  const { userId } = req.params;
+
+  const booksResult = await Book.find({ user: userId }).populate('user');
+
+  res.json({
+    message: 'Books:',
+    books: booksResult,
+  });
+};
+
 const createBook = async (req, res) => {
-  const { name, author, descripiton, imgURL } = req.body;
+  const { name, author, description, imgURL } = req.body;
 
   const newBook = new Book({
     name,
     author,
-    descripiton,
+    description,
     imgURL,
     rented: false,
   });
@@ -55,9 +65,9 @@ const returnBook = async (req, res) => {
 
 const updateBook = async (req, res) => {
   const { id } = req.params;
-  const { name, author, descripiton, imgURL } = req.body;
+  const { name, author, description, imgURL } = req.body;
 
-  await Book.findByIdAndUpdate(id, { name, author, descripiton, imgURL });
+  await Book.findByIdAndUpdate(id, { name, author, description, imgURL });
   const updatedBook = await Book.findById(id);
 
   res.json({
@@ -72,4 +82,12 @@ const deleteBook = async (req, res) => {
   res.json({ message: 'Book deleted' });
 };
 
-module.exports = { getAllBooks, createBook, rentBook, returnBook, updateBook, deleteBook };
+module.exports = {
+  getAllBooks,
+  getBooksByUser,
+  createBook,
+  rentBook,
+  returnBook,
+  updateBook,
+  deleteBook,
+};
