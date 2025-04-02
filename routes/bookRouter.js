@@ -6,6 +6,7 @@ const WithAuth = require('../middlewares/auth');
 router.get('/book', bookController.getAllBooks);
 router.post('/book', WithAuth, bookController.createBook);
 router.put('/bookrent/:id', WithAuth, bookController.rentBook);
+router.put('/bookrenturn/:id', WithAuth, bookController.returnBook);
 router.put('/book/:id', WithAuth, bookController.updateBook);
 router.delete('/book/:id', WithAuth, bookController.deleteBook);
 

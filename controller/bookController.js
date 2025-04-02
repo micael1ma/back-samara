@@ -7,11 +7,13 @@ const getAllBooks = async (req, res) => {
 };
 
 const createBook = async (req, res) => {
-  const { name, author } = req.body;
+  const { name, author, descripiton, imgURL } = req.body;
 
   const newBook = new Book({
     name,
     author,
+    descripiton,
+    imgURL,
     rented: false,
   });
 
@@ -37,11 +39,25 @@ const rentBook = async (req, res) => {
   });
 };
 
+const returnBook = async (req, res) => {
+  const { id } = req.params;
+  const userId = null;
+  const rented = false;
+
+  await Book.findByIdAndUpdate(id, { rented, user: userId });
+  const updatedBook = await Book.findById(id);
+
+  res.json({
+    message: 'Book returned',
+    updatedBook,
+  });
+};
+
 const updateBook = async (req, res) => {
   const { id } = req.params;
-  const { name, author } = req.body;
+  const { name, author, descripiton, imgURL } = req.body;
 
-  await Book.findByIdAndUpdate(id, { name, author });
+  await Book.findByIdAndUpdate(id, { name, author, descripiton, imgURL });
   const updatedBook = await Book.findById(id);
 
   res.json({
@@ -56,4 +72,4 @@ const deleteBook = async (req, res) => {
   res.json({ message: 'Book deleted' });
 };
 
-module.exports = { getAllBooks, createBook, rentBook, updateBook, deleteBook };
+module.exports = { getAllBooks, createBook, rentBook, returnBook, updateBook, deleteBook };
